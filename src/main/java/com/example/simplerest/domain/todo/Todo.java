@@ -1,15 +1,19 @@
 package com.example.simplerest.domain.todo;
 
 import com.example.simplerest.domain.user.User;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Objects;
 
-@Data
-@Table
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor
+@Entity
 public class Todo {
 
     @Id
@@ -23,4 +27,17 @@ public class Todo {
 
     @ManyToOne
     private User user;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Todo todo = (Todo) o;
+        return id != null && Objects.equals(id, todo.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

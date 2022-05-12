@@ -2,14 +2,21 @@ package com.example.simplerest.domain.post;
 
 
 import com.example.simplerest.domain.user.User;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-@Data
-@Table
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor
+@Entity
 public class Post {
 
     @Id
@@ -22,9 +29,23 @@ public class Post {
     @Column
     private String body;
 
-    @OneToMany
+    @ToString.Exclude
+    @OneToMany(mappedBy = "post")
     private Set<Comment> comments = new HashSet<>();
 
     @ManyToOne
     private User user;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Post post = (Post) o;
+        return id != null && Objects.equals(id, post.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

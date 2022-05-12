@@ -1,15 +1,19 @@
 package com.example.simplerest.domain.post;
 
 import com.example.simplerest.domain.user.User;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Objects;
 
-@Data
-@Table
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor
+@Entity
 public class Comment {
 
     @Id
@@ -26,4 +30,17 @@ public class Comment {
 
     @Column
     private String body;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Comment comment = (Comment) o;
+        return id != null && Objects.equals(id, comment.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
