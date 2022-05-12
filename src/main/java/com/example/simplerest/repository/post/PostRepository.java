@@ -1,0 +1,7 @@
+package com.example.simplerest.repository.post;
+
+import com.example.simplerest.domain.post.Post;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PostRepository extends JpaRepository<Post, Long> {
+}
