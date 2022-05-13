@@ -5,9 +5,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
+import java.lang.reflect.ParameterizedType;
+import java.util.Arrays;
 import java.util.List;
 
 public class StepItemReader<T> implements ItemReader<T> {
@@ -15,12 +18,14 @@ public class StepItemReader<T> implements ItemReader<T> {
 
     private final String apiUrl;
     private final RestTemplate restTemplate;
+    private final ParameterizedTypeReference<List<T>> responseType;
     private List<T> data;
     private int nextIndex = 0;
 
-    public StepItemReader(String apiUrl, RestTemplate restTemplate) {
+    public StepItemReader(String apiUrl, RestTemplate restTemplate, ParameterizedTypeReference<List<T>> responseType) {
         this.apiUrl = apiUrl;
         this.restTemplate = restTemplate;
+        this.responseType = responseType;
     }
 
     @Override
@@ -46,11 +51,9 @@ public class StepItemReader<T> implements ItemReader<T> {
     private List<T> fetchFromApi() {
         LOGGER.debug("Fetching data from an external API by using the url: {}", apiUrl);
 
-        var entity = restTemplate.exchange(apiUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<T>>() {
-        });
-        var responseData = entity.getBody();
-        LOGGER.debug("Found {} data", responseData.size());
+        List<T> list = restTemplate.exchange(apiUrl, HttpMethod.GET, null, responseType).getBody();
+        LOGGER.debug("Found {} data", list.size());
 
-        return responseData;
+        return list;
     }
 }

@@ -8,6 +8,7 @@ import com.example.simplerest.service.post.CommentService;
 import com.example.simplerest.service.post.PostService;
 import com.example.simplerest.service.todo.TodoService;
 import com.example.simplerest.service.user.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -20,8 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 @Configuration
 @EnableBatchProcessing
@@ -34,21 +38,25 @@ public class BatchConfig {
     private final PostService postService;
     private final TodoService todoService;
 
+
     @Value("${rest.api.url}")
     private String apiUrl;
+    private final ObjectMapper mapper;
 
-    public BatchConfig(UserService userService, CommentService commentService, PostService postService, TodoService todoService) {
+    public BatchConfig(UserService userService, CommentService commentService, PostService postService, TodoService todoService, ObjectMapper jacksonObjectMapper) {
         this.userService = userService;
         this.commentService = commentService;
         this.postService = postService;
         this.todoService = todoService;
+        this.mapper = jacksonObjectMapper;
     }
 
     @Bean
     public Step userStep(RestTemplate restTemplate, StepBuilderFactory stepBuilderFactory) {
         return stepBuilderFactory.get("userStep")
                 .<UserDto, UserDto>chunk(10)
-                .reader(new StepItemReader<UserDto>(apiUrl + "/users", restTemplate))
+                .reader(new StepItemReader<UserDto>(apiUrl + "/users", restTemplate, new ParameterizedTypeReference<>() {
+                }))
                 .writer(items -> {
                     LOGGER.info(">>>> Writing users: {}", items);
                     items.forEach(userService::save);
@@ -60,7 +68,8 @@ public class BatchConfig {
     public Step postStep(RestTemplate restTemplate, StepBuilderFactory stepBuilderFactory) {
         return stepBuilderFactory.get("postStep")
                 .<PostDto, PostDto>chunk(10)
-                .reader(new StepItemReader<PostDto>(apiUrl + "/posts", restTemplate))
+                .reader(new StepItemReader<PostDto>(apiUrl + "/posts", restTemplate, new ParameterizedTypeReference<>() {
+                }))
                 .writer(items -> {
                     LOGGER.info(">>>> Writing posts: {}", items);
                     items.forEach(postService::save);
@@ -72,7 +81,8 @@ public class BatchConfig {
     public Step commentStep(RestTemplate restTemplate, StepBuilderFactory stepBuilderFactory) {
         return stepBuilderFactory.get("commentStep")
                 .<CommentDto, CommentDto>chunk(10)
-                .reader(new StepItemReader<CommentDto>(apiUrl + "/comments", restTemplate))
+                .reader(new StepItemReader<CommentDto>(apiUrl + "/comments", restTemplate, new ParameterizedTypeReference<>() {
+                }))
                 .writer(items -> {
                     LOGGER.info(">>>> Writing comments: {}", items);
                     items.forEach(commentService::save);
@@ -84,7 +94,8 @@ public class BatchConfig {
     public Step todoStep(RestTemplate restTemplate, StepBuilderFactory stepBuilderFactory) {
         return stepBuilderFactory.get("todoStep")
                 .<TodoDto, TodoDto>chunk(10)
-                .reader(new StepItemReader<TodoDto>(apiUrl + "/todos", restTemplate))
+                .reader(new StepItemReader<TodoDto>(apiUrl + "/todos", restTemplate, new ParameterizedTypeReference<>() {
+                }))
                 .writer(items -> {
                     LOGGER.info(">>>> Writing todos: {}", items);
                     items.forEach(todoService::save);
