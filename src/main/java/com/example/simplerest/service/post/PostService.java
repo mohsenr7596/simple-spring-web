@@ -8,6 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class PostService {
     private final PostRepository postRepository;
@@ -57,5 +60,9 @@ public class PostService {
         post.setBody(dto.getBody());
         post.setTitle(dto.getTitle());
         post.setUser(userRepository.getById(dto.getId()));
+    }
+
+    public List<PostDto> searchByTitle(String title) {
+        return postRepository.findByTitleLikeIgnoreCase(title).stream().map(PostDto::new).collect(Collectors.toList());
     }
 }

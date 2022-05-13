@@ -1,0 +1,69 @@
+package com.example.simplerest.controller.post;
+
+import com.example.simplerest.dto.post.CommentDto;
+import com.example.simplerest.dto.post.PostDto;
+import com.example.simplerest.service.post.CommentService;
+import com.example.simplerest.service.post.PostService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/post")
+public class PostController {
+    private final PostService postService;
+    private final CommentService commentService;
+
+
+    public PostController(PostService postService, CommentService commentService) {
+        this.postService = postService;
+        this.commentService = commentService;
+    }
+
+    @GetMapping
+    public Page<PostDto> readAll(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size
+    ) {
+        return postService.readAll(PageRequest.of(page, size));
+    }
+
+    @GetMapping("/posts/{id}")
+    public PostDto read(
+            @PathVariable("id") long id
+    ) {
+        return postService.readById(id);
+    }
+
+    @GetMapping("/posts/{id}/comments")
+    public List<CommentDto> readAllComments(
+            @PathVariable("id") long id
+    ) {
+        return commentService.readByPostId(id);
+    }
+
+    @GetMapping("/posts")
+    public List<PostDto> search(@RequestParam("title") String title) {
+        return postService.searchByTitle(title);
+    }
+
+    @PostMapping
+    public ResponseEntity create(PostDto dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(postService.save(dto));
+    }
+
+    @PatchMapping("/posts/{id}")
+    public ResponseEntity update(@PathVariable("id") long id, PostDto dto) {
+        return ResponseEntity.ok(postService.updateById(id, dto));
+    }
+
+    @DeleteMapping("/posts/{id}")
+    public ResponseEntity delete(@PathVariable("id") long id) {
+        postService.deleteById(id);
+        return ResponseEntity.accepted().build();
+    }
+}

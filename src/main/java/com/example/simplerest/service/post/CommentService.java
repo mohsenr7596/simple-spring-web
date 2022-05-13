@@ -8,6 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
@@ -58,5 +61,9 @@ public class CommentService {
         comment.setBody(dto.getBody());
         comment.setName(dto.getName());
         comment.setPost(postRepository.getById(dto.getId()));
+    }
+
+    public List<CommentDto> readByPostId(long id){
+        return commentRepository.findByPostId(id).stream().map(CommentDto::new).collect(Collectors.toList());
     }
 }
