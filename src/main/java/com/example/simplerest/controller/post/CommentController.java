@@ -1,8 +1,6 @@
 package com.example.simplerest.controller.post;
 
 import com.example.simplerest.dto.post.CommentDto;
-import com.example.simplerest.dto.post.CommentDto;
-import com.example.simplerest.service.post.CommentService;
 import com.example.simplerest.service.post.CommentService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/comment")
 public class CommentController {
     private final CommentService commentService;
 
@@ -31,7 +29,7 @@ public class CommentController {
     }
 
     @GetMapping("/comments")
-    public List<CommentDto> readAllComments(
+    public List<CommentDto> readAllByPostId(
             @RequestParam("postId") long id
     ) {
         return commentService.readByPostId(id);
