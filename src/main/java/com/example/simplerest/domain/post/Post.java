@@ -28,12 +28,13 @@ public class Post {
     @Column
     private String body;
 
+    @ManyToOne
+    private User user;
+
     @ToString.Exclude
     @OneToMany(mappedBy = "post")
     private Set<Comment> comments = new HashSet<>();
 
-    @ManyToOne
-    private User user;
 
     @Override
     public boolean equals(Object o) {
