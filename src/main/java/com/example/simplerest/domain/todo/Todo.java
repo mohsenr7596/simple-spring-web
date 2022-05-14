@@ -16,6 +16,7 @@ import java.util.Objects;
 public class Todo {
 
     @Id
+    @GeneratedValue
     private Long id;
 
     @Column

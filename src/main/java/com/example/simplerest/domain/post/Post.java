@@ -19,6 +19,7 @@ import java.util.Set;
 public class Post {
 
     @Id
+    @GeneratedValue
     private Long id;
 
     @Column

@@ -62,7 +62,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity create(PostDto dto) {
         LOGGER.info("calling create enetity.");
-        return ResponseEntity.status(HttpStatus.CREATED).body(postService.save(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(postService.create(dto));
     }
 
     @PatchMapping("/posts/{id}")

@@ -37,7 +37,7 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity create(CommentDto dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.create(dto));
     }
 
     @PatchMapping("/comments/{id}")

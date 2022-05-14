@@ -6,8 +6,10 @@ import com.example.simplerest.repository.user.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class UserService {
     private final UserRepository userRepository;
 
@@ -15,11 +17,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public long save(UserDto dto) {
-        if (dto.getId() != null) {
-            updateById(dto.getId(), dto);
-            return dto.getId();
-        }
+    public long create(UserDto dto) {
         var user = new User();
         fillEntity(user, dto);
         userRepository.save(user);

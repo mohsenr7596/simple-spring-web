@@ -25,8 +25,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-
 @Configuration
 @EnableBatchProcessing
 @EnableScheduling
@@ -58,8 +56,8 @@ public class BatchConfig {
                 .reader(new StepItemReader<UserDto>(apiUrl + "/users", restTemplate, new ParameterizedTypeReference<>() {
                 }))
                 .writer(items -> {
-                    LOGGER.info(">>>> Writing users: {}", items);
-                    items.forEach(userService::save);
+                    LOGGER.info(">>>> Writing users: {}", items.size());
+                    items.forEach(userService::create);
                 })
                 .build();
     }
@@ -71,8 +69,8 @@ public class BatchConfig {
                 .reader(new StepItemReader<PostDto>(apiUrl + "/posts", restTemplate, new ParameterizedTypeReference<>() {
                 }))
                 .writer(items -> {
-                    LOGGER.info(">>>> Writing posts: {}", items);
-                    items.forEach(postService::save);
+                    LOGGER.info(">>>> Writing posts: {}", items.size());
+                    items.forEach(postService::create);
                 })
                 .build();
     }
@@ -84,8 +82,8 @@ public class BatchConfig {
                 .reader(new StepItemReader<CommentDto>(apiUrl + "/comments", restTemplate, new ParameterizedTypeReference<>() {
                 }))
                 .writer(items -> {
-                    LOGGER.info(">>>> Writing comments: {}", items);
-                    items.forEach(commentService::save);
+                    LOGGER.info(">>>> Writing comments: {}", items.size());
+                    items.forEach(commentService::create);
                 })
                 .build();
     }
@@ -97,8 +95,8 @@ public class BatchConfig {
                 .reader(new StepItemReader<TodoDto>(apiUrl + "/todos", restTemplate, new ParameterizedTypeReference<>() {
                 }))
                 .writer(items -> {
-                    LOGGER.info(">>>> Writing todos: {}", items);
-                    items.forEach(todoService::save);
+                    LOGGER.info(">>>> Writing todos: {}", items.size());
+                    items.forEach(todoService::create);
                 })
                 .build();
     }
