@@ -24,9 +24,7 @@ public class JobConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Map<String, JobParameter> parameters = new HashMap<>();
-        JobParameter parameter = new JobParameter(new Date());
-        parameters.put("currentTime", parameter);
+        Map<String, JobParameter> parameters = Map.of("currentTime", new JobParameter(new Date()));
         var jobParameters = new JobParameters(parameters);
         jobLauncher.run(job, jobParameters);
     }

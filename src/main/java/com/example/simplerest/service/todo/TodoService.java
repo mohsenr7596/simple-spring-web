@@ -57,7 +57,7 @@ public class TodoService {
     public void fillEntity(Todo todo, TodoDto dto) {
         todo.setCompleted(dto.isCompleted());
         todo.setTitle(dto.getTitle());
-        todo.setUser(userRepository.getById(dto.getId()));
+        todo.setUser(userRepository.findById(dto.getId()).orElse(null));
     }
 
     public List<TodoDto> readByUserIdAndCompleted(long id, boolean completed) {

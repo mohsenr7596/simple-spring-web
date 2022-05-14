@@ -57,7 +57,7 @@ public class PostService {
     public void fillEntity(Post post, PostDto dto) {
         post.setBody(dto.getBody());
         post.setTitle(dto.getTitle());
-        post.setUser(userRepository.getById(dto.getId()));
+        post.setUser(userRepository.findById(dto.getId()).orElse(null));
     }
 
     public List<PostDto> searchByTitle(String title) {

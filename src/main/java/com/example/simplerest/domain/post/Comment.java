@@ -28,6 +28,7 @@ public class Comment {
     @Column
     private String name;
 
+    @Lob
     @Column
     private String body;
 

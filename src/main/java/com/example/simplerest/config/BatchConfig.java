@@ -17,7 +17,6 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -102,17 +101,18 @@ public class BatchConfig {
     }
 
     @Bean
-    public Job exampleJob(JobBuilderFactory jobBuilderFactory,
+    public Job executeJob(JobBuilderFactory jobBuilderFactory,
                           Step userStep,
                           Step commentStep,
                           Step todoStep,
                           Step postStep) {
         return jobBuilderFactory.get("readFromApiJob")
                 .incrementer(new RunIdIncrementer())
-                .start(userStep)
+                .flow(userStep)
                 .next(postStep)
                 .next(commentStep)
                 .next(todoStep)
+                .end()
                 .build();
     }
 }

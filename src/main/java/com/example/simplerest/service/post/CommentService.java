@@ -58,7 +58,7 @@ public class CommentService {
         comment.setEmail(dto.getEmail());
         comment.setBody(dto.getBody());
         comment.setName(dto.getName());
-        comment.setPost(postRepository.getById(dto.getId()));
+        comment.setPost(postRepository.findById(dto.getId()).orElse(null));
     }
 
     public List<CommentDto> readByPostId(long id){
